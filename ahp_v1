@@ -1,0 +1,1672 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>AHP</title>
+
+        <style>
+            header {
+                position: fixed;
+                top: 0%;
+                left: 0%;
+                height: 10%;
+                width: 100%;
+                background-color: rgba(240,240,240,1);
+                display: flex;
+                flex-direction: row;
+            }
+            /* header .logo {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                max-width: 100%;
+                max-height: 100%;
+            } */
+            header .logo {
+                display: inline;
+                text-align: center;
+                align-items: center;
+                justify-content: center;
+                margin: auto;
+            }
+            header .hamburger_menu {
+                position: absolute;
+                top: 50%;
+                left: 95%;
+                transform: translate(0%, -50%);
+                width: 50px;
+                height: 50px;
+                border-radius: 5px;
+                background-color: rgba(160,160,160,1);
+                cursor: pointer;
+            }
+            @media (max-width: 767px) {
+                header .hamburger_menu {
+                    left: 85%;
+                }
+            }
+            header .hamburger_menu span{
+                display: inline-block;
+                transition: all .4s;
+                position: absolute;
+                left: 14px;
+                height: 3px;
+                border-radius: 2px;
+                background-color: rgba(255,255,255,1);
+                width: 45%;
+            }
+            header .hamburger_menu span:nth-of-type(1) {
+                top: 15px; 
+            }
+            header .hamburger_menu span:nth-of-type(2) {
+                top: 23px;
+            }
+            header .hamburger_menu span:nth-of-type(3) {
+                top: 31px;
+            }
+            header .hamburger_menu.active span:nth-of-type(1) {
+                top: 18px;
+                left: 18px;
+                transform: translateY(6px) rotate(-45deg);
+                width: 30%;
+            }
+            header .hamburger_menu.active span:nth-of-type(2) {
+                opacity: 0;
+            }
+            header .hamburger_menu.active span:nth-of-type(3){
+                top: 30px;
+                left: 18px;
+                transform: translateY(-6px) rotate(45deg);
+                width: 30%;
+            }
+
+            main {
+                position: fixed;
+                top: 10%;
+                left: 0%;
+                height: 85%;
+                width: 100%;
+            }
+            main .setting_page {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                transition: transform 1.0s ease, opacity 1.0s ease;
+            }
+            main .setting_page.active {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            main .setting_page.closing {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            main .setting_items_title {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 10px;
+            }
+            main .setting_items_title span {
+                width: 24px;
+                height: 24px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                border: 1px solid rgba(80,80,80,1);
+                background-color: rgba(255,255,255,1);
+                font-size: 26px;
+                transition: all .4s;
+            }
+            main .setting_items_title span::before {
+                content: "+";
+                position: relative;
+                top: -2px;
+            }   
+            main .setting_items_title span:hover {
+                background-color: rgba(160,160,160,1);
+                cursor: pointer;
+            }   
+            main .setting_items {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            main .setting_item {
+                margin: 5px auto;
+                display: none;
+            }
+            main .setting_item.active {
+                display: block;
+            }
+            main .setting_criterias_title {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 10px;
+            }
+            main .setting_criterias_title span {
+                width: 24px;
+                height: 24px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all .4s;
+                border-radius: 50%;
+                border: 1px solid rgba(80,80,80,1);
+                background-color: rgba(255,255,255,1);
+                font-size: 26px;
+            }
+            main .setting_criterias_title span::before {
+                content: "+";
+                position: relative;
+                top: -2px;
+            }   
+            main .setting_criterias_title span:hover {
+                background-color: rgba(160,160,160,1);
+                cursor: pointer;
+            }   
+            main .setting_criterias {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            main .setting_criteria {
+                margin: 5px auto;
+                display: none;
+            }
+            main .setting_criteria.active {
+                display: block;
+            }
+            main .calculation_page {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                display: none;
+            }
+            main .calculation_page.active {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                overflow-y: scroll;
+            }
+            main .calculation_rng_title {
+                display: none;
+            }
+            main .calculation_rng_title.active {
+                display: inline;
+            }
+            main .calculation_rng_title h3 {
+                width: 100%;
+                word-wrap: break-word;
+                text-align: center;
+            }
+            main .calculation_rngs {
+                display: none;
+            }
+            main .calculation_rngs.active {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            main .calculation_row {
+                display: none;
+            }
+            main .calculation_row.active {
+                width: 350px;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                margin: 5px 0;
+            }
+            main .rng_left {
+                width: 80px;
+                display: block;
+                padding-bottom: 20px;
+                padding-right: 5px;
+                font-size: 12px;
+                word-wrap: break-word;
+            }
+            main .rng_right {
+                width: 80px;
+                display: block;
+                padding-bottom: 20px;
+                padding-left: 5px;
+                font-size: 12px;
+                word-wrap: break-word;
+            }
+            main .rng_upper {
+                margin-bottom: 10px;
+            }
+            main .rng_lower {
+                display: flex;
+                justify-content: space-between;
+                font-size: 10px;
+            }
+            main .rng {
+                width: 200px;
+                -webkit-appearance: none;
+                appearance: none;
+            }
+            main .rng:focus {
+                outline: none;
+            }
+            main .rng::-webkit-slider-runnable-track {
+                width: 100%;
+                height: 1px;
+                cursor: pointer;
+                box-shadow: none;
+                background: rgb(0,0,0);
+                border-radius: 0px;
+                border: 0px solid rgb(0,0,0);
+            }
+            main .rng::-moz-range-track {
+                width: 100%;
+                height: 1px;
+                cursor: pointer;
+                box-shadow: none;
+                background: rgb(0,0,0);
+                border-radius: 0px;
+                border: 0px solid rgb(0,0,0);
+            }
+            main .rng::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                appearance: none;
+                box-shadow: none;
+                border: 0px solid rgb(80,80,80);
+                box-shadow: 0px 10px 10px rgba(80,80,80,0.25);
+                height: 18px;
+                width: 8px;
+                border-radius: 22px;
+                background: rgb(80,80,80);
+                cursor: pointer;
+                margin-top: -10px;
+            }
+            main .rng::-moz-range-thumb{
+                    box-shadow: none;
+                    border: 0px solid rgb(0,0,0);
+                    box-shadow: 0px 10px 10px rgba(0,0,0,0.25);
+                    height: 18px;
+                    width: 8px;
+                    border-radius: 22px;
+                    background: rgba(0,0,0,1);
+                    cursor: pointer;
+                    -webkit-appearance: none;
+                    appearance: none; /* Standard property for compatibility */
+                    margin-top: -20px;
+            }
+            main .rng::-moz-focus-outer {
+                border: 0;
+            }
+            main .calculation_results {
+                width: 80%;
+                border: 1px solid rgba(80,80,80,1);
+                border-collapse: collapse;
+                overflow-y: scroll;
+                margin-bottom: 30px;
+            }
+            main .calculation_results th,td {
+                border: 1px solid rgba(80,80,80,1);
+                border-collapse: collapse;
+                text-align: center;
+            }
+            main .i1_row {
+                display: none;
+            }
+            main .i1_row.active {
+                display: table-row;
+            }
+            main .i2_row {
+                display: none;
+            }
+            main .i2_row.active {
+                display: table-row;
+            }
+            main .i3_row {
+                display: none;
+            }
+            main .i3_row.active {
+                display: table-row;
+            }
+            main .i4_row {
+                display: none;
+            }
+            main .i4_row.active {
+                display: table-row;
+            }
+
+            footer {
+                position: fixed;
+                top: 95%;
+                left: 0%;
+                height: 5%;
+                width: 100%;
+                background-color: rgba(80,80,80,1);
+            }
+        </style>
+    </head>
+
+    <body>
+        <header>
+            <!-- <img class="logo" src="media/temporary_logo.svg"> -->
+            <h1 class="logo">Tool for AHP</h1>
+            <div class="hamburger_menu active" id="hamburger_menu" onclick="hamburger_transition()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </header>
+
+        <main>
+            <!--//////////////////////////////
+            ///          settings          ///
+            ///////////////////////////////-->
+            <div class="setting_page active" id="setting_page">
+                <div class="setting_items_title" id="setting_items_title">
+                    <h3>item</h3><span onclick="show_items()"></span>
+                </div>
+                <div class="setting_items" id="setting_items">
+                    <input type="text" class="setting_item active" id="setting_item_01" value="i1">
+                    <input type="text" class="setting_item active" id="setting_item_02" value="i2">
+                    <input type="text" class="setting_item active" id="setting_item_03" value="i3">
+                    <input type="text" class="setting_item" id="setting_item_04" value="i4">
+                    <input type="text" class="setting_item" id="setting_item_05" value="i5">
+                    <input type="text" class="setting_item" id="setting_item_06" value="i6">
+                </div>
+                <div class="setting_criterias_title" id="setting_criterias_title">
+                    <h3>criteria</h3><span onclick="show_criterias()"></span>
+                </div>
+                <div class="setting_criterias" id="setting_criterias">
+                    <input type="text" class="setting_criteria active" id="setting_criteria_01" value="p1">
+                    <input type="text" class="setting_criteria active" id="setting_criteria_02" value="p2">
+                    <input type="text" class="setting_criteria active" id="setting_criteria_03" value="p3">
+                    <input type="text" class="setting_criteria" id="setting_criteria_04" value="p4">
+                    <input type="text" class="setting_criteria" id="setting_criteria_05" value="p5">
+                    <input type="text" class="setting_criteria" id="setting_criteria_06" value="p6">
+                </div>
+            </div>
+
+            <!--/////////////////////////////////
+            ///          calculation          ///
+            //////////////////////////////////-->
+            <div class="calculation_page" id="calculation_page">
+                <!--/////////////////////////////
+                ///          base_c0          ///
+                //////////////////////////////-->
+                <div class="calculation_rng_title active" id="calculation_rng_title">
+                    <h3>weight evaluation for criterias</h3>
+                </div>
+                <div class="calculation_rngs active" id="calculation_rngs_base_c0">
+                    <div class="calculation_row active" id="row_c1_c2">
+                        <span class="rng_left rng_c1"></span>
+                        <div class="rng_center">
+                            <div class="rng_upper">
+                                <input type="range" class="rng" id="rng_c1_c2" min="1" max="5" value="3" oninput="update_result()">
+                            </div>
+                            <div class="rng_lower">
+                                <span>5</span>
+                                <span>3</span>
+                                <span>1</span>
+                                <span>3</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        <span class="rng_right rng_c2"></span>
+                    </div>
+                    <div class="calculation_row active" id="row_c1_c3">
+                        <span class="rng_left rng_c1"></span>
+                        <div class="rng_center">
+                            <div class="rng_upper">
+                                <input type="range" class="rng" id="rng_c1_c3" min="1" max="5" value="3" oninput="update_result()">
+                            </div>
+                            <div class="rng_lower">
+                                <span>5</span>
+                                <span>3</span>
+                                <span>1</span>
+                                <span>3</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        <span class="rng_right rng_c3"></span>
+                    </div>
+                    <div class="calculation_row active" id="row_c1_c4">
+                        <span class="rng_left rng_c1"></span>
+                        <div class="rng_center">
+                            <div class="rng_upper">
+                                <input type="range" class="rng" id="rng_c1_c4" min="1" max="5" value="3" oninput="update_result()">
+                            </div>
+                            <div class="rng_lower">
+                                <span>5</span>
+                                <span>3</span>
+                                <span>1</span>
+                                <span>3</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        <span class="rng_right rng_c4"></span>
+                    </div>
+                    <div class="calculation_row active" id="row_c2_c3">
+                        <span class="rng_left rng_c2"></span>
+                        <div class="rng_center">
+                            <div class="rng_upper">
+                                <input type="range" class="rng" id="rng_c2_c3" min="1" max="5" value="3" oninput="update_result()">
+                            </div>
+                            <div class="rng_lower">
+                                <span>5</span>
+                                <span>3</span>
+                                <span>1</span>
+                                <span>3</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        <span class="rng_right rng_c3"></span>
+                    </div>
+                    <div class="calculation_row active" id="row_c2_c4">
+                        <span class="rng_left rng_c2"></span>
+                        <div class="rng_center">
+                            <div class="rng_upper">
+                                <input type="range" class="rng" id="rng_c2_c4" min="1" max="5" value="3" oninput="update_result()">
+                            </div>
+                            <div class="rng_lower">
+                                <span>5</span>
+                                <span>3</span>
+                                <span>1</span>
+                                <span>3</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        <span class="rng_right rng_c4"></span>
+                    </div>
+                    <div class="calculation_row active" id="row_c3_c4">
+                        <span class="rng_left rng_c3"></span>
+                        <div class="rng_center">
+                            <div class="rng_upper">
+                                <input type="range" class="rng" id="rng_c3_c4" min="1" max="5" value="3" oninput="update_result()">
+                            </div>
+                            <div class="rng_lower">
+                                <span>5</span>
+                                <span>3</span>
+                                <span>1</span>
+                                <span>3</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        <span class="rng_right rng_c4"></span>
+                    </div>
+                </div>
+
+                <!--/////////////////////////////
+                ///          base_c1          ///
+                //////////////////////////////-->
+                <div class="calculation_rng_title active" id="calculation_rng_title_base_c1">
+                    <h3 id="title_c1">weight evaluation for items on c1</h3>
+                </div>
+                <div class="calculation_rngs active" id="calculation_rngs_base_c1">
+                    <div class="calculation_row active" id="row_c1_i1_i2">
+                        <span class="rng_left rng_i1"></span>
+                        <div class="rng_center">
+                            <div class="rng_upper">
+                                <input type="range" class="rng" id="rng_c1_i1_i2" min="1" max="5" value="3" oninput="update_result()">
+                            </div>
+                            <div class="rng_lower">
+                                <span>5</span>
+                                <span>3</span>
+                                <span>1</span>
+                                <span>3</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        <span class="rng_right rng_i2"></span>
+                    </div>
+                    <div class="calculation_row active" id="row_c1_i1_i3">
+                        <span class="rng_left rng_i1"></span>
+                        <div class="rng_center">
+                            <div class="rng_upper">
+                                <input type="range" class="rng" id="rng_c1_i1_i3" min="1" max="5" value="3" oninput="update_result()">
+                            </div>
+                            <div class="rng_lower">
+                                <span>5</span>
+                                <span>3</span>
+                                <span>1</span>
+                                <span>3</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        <span class="rng_right rng_i3"></span>
+                    </div>
+                    <div class="calculation_row active" id="row_c1_i1_i4">
+                        <span class="rng_left rng_i1"></span>
+                        <div class="rng_center">
+                            <div class="rng_upper">
+                                <input type="range" class="rng" id="rng_c1_i1_i4" min="1" max="5" value="3" oninput="update_result()">
+                            </div>
+                            <div class="rng_lower">
+                                <span>5</span>
+                                <span>3</span>
+                                <span>1</span>
+                                <span>3</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        <span class="rng_right rng_i4"></span>
+                    </div>
+                    <div class="calculation_row active" id="row_c1_i2_i3">
+                        <span class="rng_left rng_i2"></span>
+                        <div class="rng_center">
+                            <div class="rng_upper">
+                                <input type="range" class="rng" id="rng_c1_i2_i3" min="1" max="5" value="3" oninput="update_result()">
+                            </div>
+                            <div class="rng_lower">
+                                <span>5</span>
+                                <span>3</span>
+                                <span>1</span>
+                                <span>3</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        <span class="rng_right rng_i3"></span>
+                    </div>
+                    <div class="calculation_row active" id="row_c1_i2_i4">
+                        <span class="rng_left rng_i2"></span>
+                        <div class="rng_center">
+                            <div class="rng_upper">
+                                <input type="range" class="rng" id="rng_c1_i2_i4" min="1" max="5" value="3" oninput="update_result()">
+                            </div>
+                            <div class="rng_lower">
+                                <span>5</span>
+                                <span>3</span>
+                                <span>1</span>
+                                <span>3</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        <span class="rng_right rng_i4"></span>
+                    </div>
+                    <div class="calculation_row active" id="row_c1_i3_i4">
+                        <span class="rng_left rng_i3"></span>
+                        <div class="rng_center">
+                            <div class="rng_upper">
+                                <input type="range" class="rng" id="rng_c1_i3_i4" min="1" max="5" value="3" oninput="update_result()">
+                            </div>
+                            <div class="rng_lower">
+                                <span>5</span>
+                                <span>3</span>
+                                <span>1</span>
+                                <span>3</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        <span class="rng_right rng_i4"></span>
+                    </div>
+                </div>
+                <!--/////////////////////////////
+                ///          base_c2          ///
+                //////////////////////////////-->
+                <div class="calculation_rng_title active" id="calculation_rng_title_base_c2">
+                    <h3 id="title_c2">weight evaluation for items on c2</h3>
+                </div>
+                <div class="calculation_rngs active" id="calculation_rngs_base_c2">
+                    <div class="calculation_row active" id="row_c2_i1_i2">
+                        <span class="rng_left rng_i1"></span>
+                        <div class="rng_center">
+                            <div class="rng_upper">
+                                <input type="range" class="rng" id="rng_c2_i1_i2" min="1" max="5" value="3" oninput="update_result()">
+                            </div>
+                            <div class="rng_lower">
+                                <span>5</span>
+                                <span>3</span>
+                                <span>1</span>
+                                <span>3</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        <span class="rng_right rng_i2"></span>
+                    </div>
+                    <div class="calculation_row active" id="row_c2_i1_i3">
+                        <span class="rng_left rng_i1"></span>
+                        <div class="rng_center">
+                            <div class="rng_upper">
+                                <input type="range" class="rng" id="rng_c2_i1_i3" min="1" max="5" value="3" oninput="update_result()">
+                            </div>
+                            <div class="rng_lower">
+                                <span>5</span>
+                                <span>3</span>
+                                <span>1</span>
+                                <span>3</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        <span class="rng_right rng_i3"></span>
+                    </div>
+                    <div class="calculation_row active" id="row_c2_i1_i4">
+                        <span class="rng_left rng_i1"></span>
+                        <div class="rng_center">
+                            <div class="rng_upper">
+                                <input type="range" class="rng" id="rng_c2_i1_i4" min="1" max="5" value="3" oninput="update_result()">
+                            </div>
+                            <div class="rng_lower">
+                                <span>5</span>
+                                <span>3</span>
+                                <span>1</span>
+                                <span>3</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        <span class="rng_right rng_i4"></span>
+                    </div>
+                    <div class="calculation_row active" id="row_c2_i2_i3">
+                        <span class="rng_left rng_i2"></span>
+                        <div class="rng_center">
+                            <div class="rng_upper">
+                                <input type="range" class="rng" id="rng_c2_i2_i3" min="1" max="5" value="3" oninput="update_result()">
+                            </div>
+                            <div class="rng_lower">
+                                <span>5</span>
+                                <span>3</span>
+                                <span>1</span>
+                                <span>3</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        <span class="rng_right rng_i3"></span>
+                    </div>
+                    <div class="calculation_row active" id="row_c2_i2_i4">
+                        <span class="rng_left rng_i2"></span>
+                        <div class="rng_center">
+                            <div class="rng_upper">
+                                <input type="range" class="rng" id="rng_c2_i2_i4" min="1" max="5" value="3" oninput="update_result()">
+                            </div>
+                            <div class="rng_lower">
+                                <span>5</span>
+                                <span>3</span>
+                                <span>1</span>
+                                <span>3</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        <span class="rng_right rng_i4"></span>
+                    </div>
+                    <div class="calculation_row active" id="row_c2_i3_i4">
+                        <span class="rng_left rng_i3"></span>
+                        <div class="rng_center">
+                            <div class="rng_upper">
+                                <input type="range" class="rng" id="rng_c2_i3_i4" min="1" max="5" value="3" oninput="update_result()">
+                            </div>
+                            <div class="rng_lower">
+                                <span>5</span>
+                                <span>3</span>
+                                <span>1</span>
+                                <span>3</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        <span class="rng_right rng_i4"></span>
+                    </div>
+                </div>
+                <!--/////////////////////////////
+                ///          base_c3          ///
+                //////////////////////////////-->
+                <div class="calculation_rng_title active" id="calculation_rng_title_base_c3">
+                    <h3 id="title_c3">weight evaluation for items on c3</h3>
+                </div>
+                <div class="calculation_rngs active" id="calculation_rngs_base_c3">
+                    <div class="calculation_row active" id="row_c3_i1_i2">
+                        <span class="rng_left rng_i1"></span>
+                        <div class="rng_center">
+                            <div class="rng_upper">
+                                <input type="range" class="rng" id="rng_c3_i1_i2" min="1" max="5" value="3" oninput="update_result()">
+                            </div>
+                            <div class="rng_lower">
+                                <span>5</span>
+                                <span>3</span>
+                                <span>1</span>
+                                <span>3</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        <span class="rng_right rng_i2"></span>
+                    </div>
+                    <div class="calculation_row active" id="row_c3_i1_i3">
+                        <span class="rng_left rng_i1"></span>
+                        <div class="rng_center">
+                            <div class="rng_upper">
+                                <input type="range" class="rng" id="rng_c3_i1_i3" min="1" max="5" value="3" oninput="update_result()">
+                            </div>
+                            <div class="rng_lower">
+                                <span>5</span>
+                                <span>3</span>
+                                <span>1</span>
+                                <span>3</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        <span class="rng_right rng_i3"></span>
+                    </div>
+                    <div class="calculation_row active" id="row_c3_i1_i4">
+                        <span class="rng_left rng_i1"></span>
+                        <div class="rng_center">
+                            <div class="rng_upper">
+                                <input type="range" class="rng" id="rng_c3_i1_i4" min="1" max="5" value="3" oninput="update_result()">
+                            </div>
+                            <div class="rng_lower">
+                                <span>5</span>
+                                <span>3</span>
+                                <span>1</span>
+                                <span>3</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        <span class="rng_right rng_i4"></span>
+                    </div>
+                    <div class="calculation_row active" id="row_c3_i2_i3">
+                        <span class="rng_left rng_i2"></span>
+                        <div class="rng_center">
+                            <div class="rng_upper">
+                                <input type="range" class="rng" id="rng_c3_i2_i3" min="1" max="5" value="3" oninput="update_result()">
+                            </div>
+                            <div class="rng_lower">
+                                <span>5</span>
+                                <span>3</span>
+                                <span>1</span>
+                                <span>3</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        <span class="rng_right rng_i3"></span>
+                    </div>
+                    <div class="calculation_row active" id="row_c3_i2_i4">
+                        <span class="rng_left rng_i2"></span>
+                        <div class="rng_center">
+                            <div class="rng_upper">
+                                <input type="range" class="rng" id="rng_c3_i2_i4" min="1" max="5" value="3" oninput="update_result()">
+                            </div>
+                            <div class="rng_lower">
+                                <span>5</span>
+                                <span>3</span>
+                                <span>1</span>
+                                <span>3</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        <span class="rng_right rng_i4"></span>
+                    </div>
+                    <div class="calculation_row active" id="row_c3_i3_i4">
+                        <span class="rng_left rng_i3"></span>
+                        <div class="rng_center">
+                            <div class="rng_upper">
+                                <input type="range" class="rng" id="rng_c3_i3_i4" min="1" max="5" value="3" oninput="update_result()">
+                            </div>
+                            <div class="rng_lower">
+                                <span>5</span>
+                                <span>3</span>
+                                <span>1</span>
+                                <span>3</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        <span class="rng_right rng_i4"></span>
+                    </div>
+                </div>
+                <!--/////////////////////////////
+                ///          base_c4          ///
+                //////////////////////////////-->
+                <div class="calculation_rng_title active" id="calculation_rng_title_base_c4">
+                    <h3 id="title_c4">weight evaluation for items on c4</h3>
+                </div>
+                <div class="calculation_rngs active" id="calculation_rngs_base_c4">
+                    <div class="calculation_row active" id="row_c4_i1_i2">
+                        <span class="rng_left rng_i1"></span>
+                        <div class="rng_center">
+                            <div class="rng_upper">
+                                <input type="range" class="rng" id="rng_c4_i1_i2" min="1" max="5" value="3" oninput="update_result()">
+                            </div>
+                            <div class="rng_lower">
+                                <span>5</span>
+                                <span>3</span>
+                                <span>1</span>
+                                <span>3</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        <span class="rng_right rng_i2"></span>
+                    </div>
+                    <div class="calculation_row active" id="row_c4_i1_i3">
+                        <span class="rng_left rng_i1"></span>
+                        <div class="rng_center">
+                            <div class="rng_upper">
+                                <input type="range" class="rng" id="rng_c4_i1_i3" min="1" max="5" value="3" oninput="update_result()">
+                            </div>
+                            <div class="rng_lower">
+                                <span>5</span>
+                                <span>3</span>
+                                <span>1</span>
+                                <span>3</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        <span class="rng_right rng_i3"></span>
+                    </div>
+                    <div class="calculation_row active" id="row_c4_i1_i4">
+                        <span class="rng_left rng_i1"></span>
+                        <div class="rng_center">
+                            <div class="rng_upper">
+                                <input type="range" class="rng" id="rng_c4_i1_i4" min="1" max="5" value="3" oninput="update_result()">
+                            </div>
+                            <div class="rng_lower">
+                                <span>5</span>
+                                <span>3</span>
+                                <span>1</span>
+                                <span>3</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        <span class="rng_right rng_i4"></span>
+                    </div>
+                    <div class="calculation_row active" id="row_c4_i2_i3">
+                        <span class="rng_left rng_i2"></span>
+                        <div class="rng_center">
+                            <div class="rng_upper">
+                                <input type="range" class="rng" id="rng_c4_i2_i3" min="1" max="5" value="3" oninput="update_result()">
+                            </div>
+                            <div class="rng_lower">
+                                <span>5</span>
+                                <span>3</span>
+                                <span>1</span>
+                                <span>3</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        <span class="rng_right rng_i3"></span>
+                    </div>
+                    <div class="calculation_row active" id="row_c4_i2_i4">
+                        <span class="rng_left rng_i2"></span>
+                        <div class="rng_center">
+                            <div class="rng_upper">
+                                <input type="range" class="rng" id="rng_c4_i2_i4" min="1" max="5" value="3" oninput="update_result()">
+                            </div>
+                            <div class="rng_lower">
+                                <span>5</span>
+                                <span>3</span>
+                                <span>1</span>
+                                <span>3</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        <span class="rng_right rng_i4"></span>
+                    </div>
+                    <div class="calculation_row active" id="row_c4_i3_i4">
+                        <span class="rng_left rng_i3"></span>
+                        <div class="rng_center">
+                            <div class="rng_upper">
+                                <input type="range" class="rng" id="rng_c4_i3_i4" min="1" max="5" value="3" oninput="update_result()">
+                            </div>
+                            <div class="rng_lower">
+                                <span>5</span>
+                                <span>3</span>
+                                <span>1</span>
+                                <span>3</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        <span class="rng_right rng_i4"></span>
+                    </div>
+                </div>
+                <!--/////////////////////////////
+                ///          base_r0          ///
+                //////////////////////////////-->
+                <div class="calculation_results_title" id="calculation_results_title">
+                    <h3>result</h3>
+                </div>
+                <table class="calculation_results" id="calculation_results">
+                    <tr>
+                        <th>item</th>
+                        <th>score</th>
+                        <th>rank</th>
+                    </tr>
+                    <tr class="i1_row active" id="i1_row">
+                        <td id="i1_item">-</td>
+                        <td id="i1_score">-</td>
+                        <td id="i1_rank">-</td>
+                    </tr>
+                    <tr class="i2_row active" id="i2_row">
+                        <td id="i2_item">-</td>
+                        <td id="i2_score">-</td>
+                        <td id="i2_rank">-</td>
+                    </tr>
+                    <tr class="i3_row active" id="i3_row">
+                        <td id="i3_item">-</td>
+                        <td id="i3_score">-</td>
+                        <td id="i3_rank">-</td>
+                    </tr>
+                    <tr class="i4_row active" id="i4_row">
+                        <td id="i4_item">-</td>
+                        <td id="i4_score">-</td>
+                        <td id="i4_rank">-</td>
+                    </tr>
+                </table>
+            </div>
+
+        </main>
+
+        <footer>
+
+        </footer>
+    </body>
+
+    <script>
+        let items = 3
+        let criterias = 3
+
+        function hamburger_transition() {
+            if (criterias < 4) {
+                document.getElementById("row_c1_c4").classList.remove("active");
+                document.getElementById("row_c2_c4").classList.remove("active");
+                document.getElementById("row_c3_c4").classList.remove("active");
+                document.getElementById("calculation_rng_title_base_c4").classList.remove("active");
+                document.getElementById("calculation_rngs_base_c4").classList.remove("active");
+            } else {
+                document.getElementById("row_c1_c4").classList.add("active");
+                document.getElementById("row_c2_c4").classList.add("active");
+                document.getElementById("row_c3_c4").classList.add("active");
+                document.getElementById("calculation_rng_title_base_c4").classList.add("active");
+                document.getElementById("calculation_rngs_base_c4").classList.add("active");
+            };
+            if (items < 4) {
+                document.getElementById("row_c1_i1_i4").classList.remove("active");
+                document.getElementById("row_c1_i2_i4").classList.remove("active");
+                document.getElementById("row_c1_i3_i4").classList.remove("active");
+                document.getElementById("row_c2_i1_i4").classList.remove("active");
+                document.getElementById("row_c2_i2_i4").classList.remove("active");
+                document.getElementById("row_c2_i3_i4").classList.remove("active");
+                document.getElementById("row_c3_i1_i4").classList.remove("active");
+                document.getElementById("row_c3_i2_i4").classList.remove("active");
+                document.getElementById("row_c3_i3_i4").classList.remove("active");
+                document.getElementById("row_c4_i1_i4").classList.remove("active");
+                document.getElementById("row_c4_i2_i4").classList.remove("active");
+                document.getElementById("row_c4_i3_i4").classList.remove("active");
+                document.getElementById("i4_row").classList.remove("active");
+            } else{
+                document.getElementById("row_c1_i1_i4").classList.add("active");
+                document.getElementById("row_c1_i2_i4").classList.add("active");
+                document.getElementById("row_c1_i3_i4").classList.add("active");
+                document.getElementById("row_c2_i1_i4").classList.add("active");
+                document.getElementById("row_c2_i2_i4").classList.add("active");
+                document.getElementById("row_c2_i3_i4").classList.add("active");
+                document.getElementById("row_c3_i1_i4").classList.add("active");
+                document.getElementById("row_c3_i2_i4").classList.add("active");
+                document.getElementById("row_c3_i3_i4").classList.add("active");
+                document.getElementById("row_c4_i1_i4").classList.add("active");
+                document.getElementById("row_c4_i2_i4").classList.add("active");
+                document.getElementById("row_c4_i3_i4").classList.add("active");
+                document.getElementById("i4_row").classList.add("active");
+            };
+
+            document.querySelectorAll(".rng_c1").forEach(element => {
+                element.textContent = document.getElementById("setting_criteria_01").value;
+            });
+            document.querySelectorAll(".rng_c2").forEach(element => {
+                element.textContent = document.getElementById("setting_criteria_02").value;
+            });
+            document.querySelectorAll(".rng_c3").forEach(element => {
+                element.textContent = document.getElementById("setting_criteria_03").value;
+            });
+            document.querySelectorAll(".rng_c4").forEach(element => {
+                element.textContent = document.getElementById("setting_criteria_04").value;
+            });
+
+            document.querySelectorAll(".rng_i1").forEach(element => {
+                element.textContent = document.getElementById("setting_item_01").value;
+            });
+            document.querySelectorAll(".rng_i2").forEach(element => {
+                element.textContent = document.getElementById("setting_item_02").value;
+            });
+            document.querySelectorAll(".rng_i3").forEach(element => {
+                element.textContent = document.getElementById("setting_item_03").value;
+            });
+            document.querySelectorAll(".rng_i4").forEach(element => {
+                element.textContent = document.getElementById("setting_item_04").value;
+            });
+
+            document.getElementById("title_c1").textContent =
+                "weight evaluation for items on " + document.getElementById("setting_criteria_01").value;
+            document.getElementById("title_c2").textContent =
+                "weight evaluation for items on " + document.getElementById("setting_criteria_02").value;
+            document.getElementById("title_c3").textContent =
+                "weight evaluation for items on " + document.getElementById("setting_criteria_03").value;
+            document.getElementById("title_c4").textContent =
+                "weight evaluation for items on " + document.getElementById("setting_criteria_04").value;
+
+            document.getElementById("i1_item").textContent = 
+                document.getElementById("setting_item_01").value;
+            document.getElementById("i2_item").textContent = 
+                document.getElementById("setting_item_02").value;
+            document.getElementById("i3_item").textContent = 
+                document.getElementById("setting_item_03").value;
+            document.getElementById("i4_item").textContent = 
+                document.getElementById("setting_item_04").value;
+
+            if (document.getElementById("hamburger_menu").classList.contains("active")) {
+                document.getElementById("hamburger_menu").classList.remove("active");
+                document.getElementById("setting_page").classList.remove("active");
+                document.getElementById("setting_page").classList.add("closing");
+                setTimeout(() => {
+                    document.getElementById("calculation_page").classList.add("active");
+                }, 500);
+            } else {
+                document.getElementById("hamburger_menu").classList.add("active");
+                document.getElementById("setting_page").classList.add("active");
+                document.getElementById("setting_page").classList.remove("closing");
+                document.getElementById("calculation_page").classList.remove("active");
+            };
+        };
+
+        function show_items() {
+            if (items == 4) {
+                console.log("cannot increase the items!");
+            } else {
+                items += 1
+                document.getElementById(
+                    "setting_item_0" + String(items)
+                ).classList.add("active")
+            };
+        };
+
+        function show_criterias() {
+            if (criterias == 4) {
+                console.log("cannot increase the criterias!");
+            } else {
+                criterias += 1
+                document.getElementById(
+                    "setting_criteria_0" + String(criterias)
+                ).classList.add("active")
+            };
+        };
+
+        function update_result() {
+            const valueMapping = {
+                1: 5/1.0,
+                2: 3/1.0,
+                3: 1/1.0,
+                4: 1/3.0,
+                5: 1/5.0,
+            };
+
+            let rng_c1_c2 = valueMapping[Number(document.getElementById("rng_c1_c2").value)];
+            let rng_c1_c3 = valueMapping[Number(document.getElementById("rng_c1_c3").value)];
+            let rng_c1_c4 = valueMapping[Number(document.getElementById("rng_c1_c4").value)];
+            let rng_c2_c3 = valueMapping[Number(document.getElementById("rng_c2_c3").value)];
+            let rng_c2_c4 = valueMapping[Number(document.getElementById("rng_c2_c4").value)];
+            let rng_c3_c4 = valueMapping[Number(document.getElementById("rng_c3_c4").value)];
+
+            let rng_c1_i1_i2 = valueMapping[Number(document.getElementById("rng_c1_i1_i2").value)];
+            let rng_c1_i1_i3 = valueMapping[Number(document.getElementById("rng_c1_i1_i3").value)];
+            let rng_c1_i1_i4 = valueMapping[Number(document.getElementById("rng_c1_i1_i4").value)];
+            let rng_c1_i2_i3 = valueMapping[Number(document.getElementById("rng_c1_i2_i3").value)];
+            let rng_c1_i2_i4 = valueMapping[Number(document.getElementById("rng_c1_i2_i4").value)];
+            let rng_c1_i3_i4 = valueMapping[Number(document.getElementById("rng_c1_i3_i4").value)];
+
+            let rng_c2_i1_i2 = valueMapping[Number(document.getElementById("rng_c2_i1_i2").value)];
+            let rng_c2_i1_i3 = valueMapping[Number(document.getElementById("rng_c2_i1_i3").value)];
+            let rng_c2_i1_i4 = valueMapping[Number(document.getElementById("rng_c2_i1_i4").value)];
+            let rng_c2_i2_i3 = valueMapping[Number(document.getElementById("rng_c2_i2_i3").value)];
+            let rng_c2_i2_i4 = valueMapping[Number(document.getElementById("rng_c2_i2_i4").value)];
+            let rng_c2_i3_i4 = valueMapping[Number(document.getElementById("rng_c2_i3_i4").value)];
+
+            let rng_c3_i1_i2 = valueMapping[Number(document.getElementById("rng_c3_i1_i2").value)];
+            let rng_c3_i1_i3 = valueMapping[Number(document.getElementById("rng_c3_i1_i3").value)];
+            let rng_c3_i1_i4 = valueMapping[Number(document.getElementById("rng_c3_i1_i4").value)];
+            let rng_c3_i2_i3 = valueMapping[Number(document.getElementById("rng_c3_i2_i3").value)];
+            let rng_c3_i2_i4 = valueMapping[Number(document.getElementById("rng_c3_i2_i4").value)];
+            let rng_c3_i3_i4 = valueMapping[Number(document.getElementById("rng_c3_i3_i4").value)];
+
+            let rng_c4_i1_i2 = valueMapping[Number(document.getElementById("rng_c4_i1_i2").value)];
+            let rng_c4_i1_i3 = valueMapping[Number(document.getElementById("rng_c4_i1_i3").value)];
+            let rng_c4_i1_i4 = valueMapping[Number(document.getElementById("rng_c4_i1_i4").value)];
+            let rng_c4_i2_i3 = valueMapping[Number(document.getElementById("rng_c4_i2_i3").value)];
+            let rng_c4_i2_i4 = valueMapping[Number(document.getElementById("rng_c4_i2_i4").value)];
+            let rng_c4_i3_i4 = valueMapping[Number(document.getElementById("rng_c4_i3_i4").value)];
+
+            let c1_c1 = 1;
+            let c1_c2 = rng_c1_c2;
+            let c1_c3 = rng_c1_c3;
+            let c1_c4 = rng_c1_c4;
+            let c2_c1 = 1 / c1_c2;
+            let c2_c2 = 1;
+            let c2_c3 = rng_c2_c3;
+            let c2_c4 = rng_c2_c4;
+            let c3_c1 = 1 / c1_c3;
+            let c3_c2 = 1 / c2_c3;
+            let c3_c3 = 1;
+            let c3_c4 = rng_c3_c4;
+            let c4_c1 = 1 / c1_c4;
+            let c4_c2 = 1 / c2_c4;
+            let c4_c3 = 1 / c3_c4;
+            let c4_c4 = 1;
+
+            let c1_i1_i1 = 1;
+            let c1_i1_i2 = rng_c1_i1_i2;
+            let c1_i1_i3 = rng_c1_i1_i3;
+            let c1_i1_i4 = rng_c1_i1_i4;
+            let c1_i2_i1 = 1 / c1_i1_i2;
+            let c1_i2_i2 = 1;
+            let c1_i2_i3 = rng_c1_i2_i3;
+            let c1_i2_i4 = rng_c1_i2_i4;
+            let c1_i3_i1 = 1 / c1_i1_i3;
+            let c1_i3_i2 = 1 / c1_i2_i3;
+            let c1_i3_i3 = 1;
+            let c1_i3_i4 = rng_c1_i3_i4;
+            let c1_i4_i1 = 1 / c1_i1_i4;
+            let c1_i4_i2 = 1 / c1_i2_i4;
+            let c1_i4_i3 = 1 / c1_i3_i4;
+            let c1_i4_i4 = 1;
+
+            let c2_i1_i1 = 1;
+            let c2_i1_i2 = rng_c2_i1_i2;
+            let c2_i1_i3 = rng_c2_i1_i3;
+            let c2_i1_i4 = rng_c2_i1_i4;
+            let c2_i2_i1 = 1 / c2_i1_i2;
+            let c2_i2_i2 = 1;
+            let c2_i2_i3 = rng_c2_i2_i3;
+            let c2_i2_i4 = rng_c2_i2_i4;
+            let c2_i3_i1 = 1 / c2_i1_i3;
+            let c2_i3_i2 = 1 / c2_i2_i3;
+            let c2_i3_i3 = 1;
+            let c2_i3_i4 = rng_c2_i3_i4;
+            let c2_i4_i1 = 1 / c2_i1_i4;
+            let c2_i4_i2 = 1 / c2_i2_i4;
+            let c2_i4_i3 = 1 / c2_i3_i4;
+            let c2_i4_i4 = 1;
+
+            let c3_i1_i1 = 1;
+            let c3_i1_i2 = rng_c3_i1_i2;
+            let c3_i1_i3 = rng_c3_i1_i3;
+            let c3_i1_i4 = rng_c3_i1_i4;
+            let c3_i2_i1 = 1 / c3_i1_i2;
+            let c3_i2_i2 = 1;
+            let c3_i2_i3 = rng_c3_i2_i3;
+            let c3_i2_i4 = rng_c3_i2_i4;
+            let c3_i3_i1 = 1 / c3_i1_i3;
+            let c3_i3_i2 = 1 / c3_i2_i3;
+            let c3_i3_i3 = 1;
+            let c3_i3_i4 = rng_c3_i3_i4;
+            let c3_i4_i1 = 1 / c3_i1_i4;
+            let c3_i4_i2 = 1 / c3_i2_i4;
+            let c3_i4_i3 = 1 / c3_i3_i4;
+            let c3_i4_i4 = 1;
+
+            let c4_i1_i1 = 1;
+            let c4_i1_i2 = rng_c4_i1_i2;
+            let c4_i1_i3 = rng_c4_i1_i3;
+            let c4_i1_i4 = rng_c4_i1_i4;
+            let c4_i2_i1 = 1 / c4_i1_i2;
+            let c4_i2_i2 = 1;
+            let c4_i2_i3 = rng_c4_i2_i3;
+            let c4_i2_i4 = rng_c4_i2_i4;
+            let c4_i3_i1 = 1 / c4_i1_i3;
+            let c4_i3_i2 = 1 / c4_i2_i3;
+            let c4_i3_i3 = 1;
+            let c4_i3_i4 = rng_c4_i3_i4;
+            let c4_i4_i1 = 1 / c4_i1_i4;
+            let c4_i4_i2 = 1 / c4_i2_i4;
+            let c4_i4_i3 = 1 / c4_i3_i4;
+            let c4_i4_i4 = 1;
+            
+            if (criterias < 4 && items < 4) {
+                c1_values = [c1_c1, c1_c2, c1_c3];
+                c2_values = [c2_c1, c2_c2, c2_c3];
+                c3_values = [c3_c1, c3_c2, c3_c3];
+                c1_product = c1_values.reduce((acc, value) => acc * value, 1);
+                c1_geometricMean = Math.pow(c1_product, 1 / c1_values.length);
+                c2_product = c2_values.reduce((acc, value) => acc * value, 1);
+                c2_geometricMean = Math.pow(c2_product, 1 / c2_values.length);
+                c3_product = c3_values.reduce((acc, value) => acc * value, 1);
+                c3_geometricMean = Math.pow(c3_product, 1 / c3_values.length);
+                gm_values = [c1_geometricMean, c2_geometricMean, c3_geometricMean]
+                gm_sum = gm_values.reduce((acc, value) => acc + value, 0);
+                c1_gm_normarized = c1_geometricMean / gm_sum
+                c2_gm_normarized = c2_geometricMean / gm_sum
+                c3_gm_normarized = c3_geometricMean / gm_sum
+
+                c1_i1_values = [c1_i1_i1, c1_i1_i2, c1_i1_i3];
+                c1_i2_values = [c1_i2_i1, c1_i2_i2, c1_i2_i3];
+                c1_i3_values = [c1_i3_i1, c1_i3_i2, c1_i3_i3];
+                c1_i1_product = c1_i1_values.reduce((acc, value) => acc * value, 1);
+                c1_i1_geometricMean = Math.pow(c1_i1_product, 1 / c1_i1_values.length);
+                c1_i2_product = c1_i2_values.reduce((acc, value) => acc * value, 1);
+                c1_i2_geometricMean = Math.pow(c1_i2_product, 1 / c1_i2_values.length);
+                c1_i3_product = c1_i3_values.reduce((acc, value) => acc * value, 1);
+                c1_i3_geometricMean = Math.pow(c1_i3_product, 1 / c1_i3_values.length);
+                gm_values = [c1_i1_geometricMean, c1_i2_geometricMean, c1_i3_geometricMean]
+                gm_sum = gm_values.reduce((acc, value) => acc + value, 0);
+                c1_i1_gm_normarized = c1_i1_geometricMean / gm_sum
+                c1_i2_gm_normarized = c1_i2_geometricMean / gm_sum
+                c1_i3_gm_normarized = c1_i3_geometricMean / gm_sum
+
+                c2_i1_values = [c2_i1_i1, c2_i1_i2, c2_i1_i3];
+                c2_i2_values = [c2_i2_i1, c2_i2_i2, c2_i2_i3];
+                c2_i3_values = [c2_i3_i1, c2_i3_i2, c2_i3_i3];
+                c2_i1_product = c2_i1_values.reduce((acc, value) => acc * value, 1);
+                c2_i1_geometricMean = Math.pow(c2_i1_product, 1 / c2_i1_values.length);
+                c2_i2_product = c2_i2_values.reduce((acc, value) => acc * value, 1);
+                c2_i2_geometricMean = Math.pow(c2_i2_product, 1 / c2_i2_values.length);
+                c2_i3_product = c2_i3_values.reduce((acc, value) => acc * value, 1);
+                c2_i3_geometricMean = Math.pow(c2_i3_product, 1 / c2_i3_values.length);
+                gm_values = [c2_i1_geometricMean, c2_i2_geometricMean, c2_i3_geometricMean]
+                gm_sum = gm_values.reduce((acc, value) => acc + value, 0);
+                c2_i1_gm_normarized = c2_i1_geometricMean / gm_sum
+                c2_i2_gm_normarized = c2_i2_geometricMean / gm_sum
+                c2_i3_gm_normarized = c2_i3_geometricMean / gm_sum
+
+                c3_i1_values = [c3_i1_i1, c3_i1_i2, c3_i1_i3];
+                c3_i2_values = [c3_i2_i1, c3_i2_i2, c3_i2_i3];
+                c3_i3_values = [c3_i3_i1, c3_i3_i2, c3_i3_i3];
+                c3_i1_product = c3_i1_values.reduce((acc, value) => acc * value, 1);
+                c3_i1_geometricMean = Math.pow(c3_i1_product, 1 / c3_i1_values.length);
+                c3_i2_product = c3_i2_values.reduce((acc, value) => acc * value, 1);
+                c3_i2_geometricMean = Math.pow(c3_i2_product, 1 / c3_i2_values.length);
+                c3_i3_product = c3_i3_values.reduce((acc, value) => acc * value, 1);
+                c3_i3_geometricMean = Math.pow(c3_i3_product, 1 / c3_i3_values.length);
+                gm_values = [c3_i1_geometricMean, c3_i2_geometricMean, c3_i3_geometricMean]
+                gm_sum = gm_values.reduce((acc, value) => acc + value, 0);
+                c3_i1_gm_normarized = c3_i1_geometricMean / gm_sum
+                c3_i2_gm_normarized = c3_i2_geometricMean / gm_sum
+                c3_i3_gm_normarized = c3_i3_geometricMean / gm_sum
+
+                c1_i1_gm_normarized_wb = c1_i1_gm_normarized * c1_gm_normarized
+                c2_i1_gm_normarized_wb = c2_i1_gm_normarized * c2_gm_normarized
+                c3_i1_gm_normarized_wb = c3_i1_gm_normarized * c3_gm_normarized
+                i1_score = c1_i1_gm_normarized_wb + c2_i1_gm_normarized_wb + c3_i1_gm_normarized_wb
+                
+                c1_i2_gm_normarized_wb = c1_i2_gm_normarized * c1_gm_normarized
+                c2_i2_gm_normarized_wb = c2_i2_gm_normarized * c2_gm_normarized
+                c3_i2_gm_normarized_wb = c3_i2_gm_normarized * c3_gm_normarized
+                i2_score = c1_i2_gm_normarized_wb + c2_i2_gm_normarized_wb + c3_i2_gm_normarized_wb
+
+                c1_i3_gm_normarized_wb = c1_i3_gm_normarized * c1_gm_normarized
+                c2_i3_gm_normarized_wb = c2_i3_gm_normarized * c2_gm_normarized
+                c3_i3_gm_normarized_wb = c3_i3_gm_normarized * c3_gm_normarized
+                i3_score = c1_i3_gm_normarized_wb + c2_i3_gm_normarized_wb + c3_i3_gm_normarized_wb
+
+                document.getElementById("i1_score").textContent = String(i1_score.toFixed(2));
+                document.getElementById("i2_score").textContent = String(i2_score.toFixed(2));
+                document.getElementById("i3_score").textContent = String(i3_score.toFixed(2));
+                let scores = [
+                    {id: 1, score: i1_score},
+                    {id: 2, score: i2_score},
+                    {id: 3, score: i3_score},
+                ];
+                scores.sort((a, b) => b.score - a.score);
+                for (let i = 0; i < scores.length; i++) {
+                    document.getElementById(`i${scores[i].id}_rank`).textContent = String(i + 1);
+                };
+
+            } else if (criterias == 4 && items < 4) {
+                c1_values = [c1_c1, c1_c2, c1_c3, c1_c4];
+                c2_values = [c2_c1, c2_c2, c2_c3, c2_c4];
+                c3_values = [c3_c1, c3_c2, c3_c3, c3_c4];
+                c4_values = [c4_c1, c4_c2, c4_c3, c4_c4];
+                c1_product = c1_values.reduce((acc, value) => acc * value, 1);
+                c1_geometricMean = Math.pow(c1_product, 1 / c1_values.length);
+                c2_product = c2_values.reduce((acc, value) => acc * value, 1);
+                c2_geometricMean = Math.pow(c2_product, 1 / c2_values.length);
+                c3_product = c3_values.reduce((acc, value) => acc * value, 1);
+                c3_geometricMean = Math.pow(c3_product, 1 / c3_values.length);
+                c4_product = c4_values.reduce((acc, value) => acc * value, 1);
+                c4_geometricMean = Math.pow(c4_product, 1 / c4_values.length);
+                gm_values = [c1_geometricMean, c2_geometricMean, c3_geometricMean, c4_geometricMean]
+                gm_sum = gm_values.reduce((acc, value) => acc + value, 0);
+                c1_gm_normarized = c1_geometricMean / gm_sum
+                c2_gm_normarized = c2_geometricMean / gm_sum
+                c3_gm_normarized = c3_geometricMean / gm_sum
+                c4_gm_normarized = c4_geometricMean / gm_sum
+
+                c1_i1_values = [c1_i1_i1, c1_i1_i2, c1_i1_i3, c1_i1_i4];
+                c1_i2_values = [c1_i2_i1, c1_i2_i2, c1_i2_i3, c1_i2_i4];
+                c1_i3_values = [c1_i3_i1, c1_i3_i2, c1_i3_i3, c1_i3_i4];
+                c1_i1_product = c1_i1_values.reduce((acc, value) => acc * value, 1);
+                c1_i1_geometricMean = Math.pow(c1_i1_product, 1 / c1_i1_values.length);
+                c1_i2_product = c1_i2_values.reduce((acc, value) => acc * value, 1);
+                c1_i2_geometricMean = Math.pow(c1_i2_product, 1 / c1_i2_values.length);
+                c1_i3_product = c1_i3_values.reduce((acc, value) => acc * value, 1);
+                c1_i3_geometricMean = Math.pow(c1_i3_product, 1 / c1_i3_values.length);
+                gm_values = [c1_i1_geometricMean, c1_i2_geometricMean, c1_i3_geometricMean]
+                gm_sum = gm_values.reduce((acc, value) => acc + value, 0);
+                c1_i1_gm_normarized = c1_i1_geometricMean / gm_sum
+                c1_i2_gm_normarized = c1_i2_geometricMean / gm_sum
+                c1_i3_gm_normarized = c1_i3_geometricMean / gm_sum
+
+                c2_i1_values = [c2_i1_i1, c2_i1_i2, c2_i1_i3, c2_i1_i4];
+                c2_i2_values = [c2_i2_i1, c2_i2_i2, c2_i2_i3, c2_i2_i4];
+                c2_i3_values = [c2_i3_i1, c2_i3_i2, c2_i3_i3, c2_i3_i4];
+                c2_i1_product = c2_i1_values.reduce((acc, value) => acc * value, 1);
+                c2_i1_geometricMean = Math.pow(c2_i1_product, 1 / c2_i1_values.length);
+                c2_i2_product = c2_i2_values.reduce((acc, value) => acc * value, 1);
+                c2_i2_geometricMean = Math.pow(c2_i2_product, 1 / c2_i2_values.length);
+                c2_i3_product = c2_i3_values.reduce((acc, value) => acc * value, 1);
+                c2_i3_geometricMean = Math.pow(c2_i3_product, 1 / c2_i3_values.length);
+                gm_values = [c2_i1_geometricMean, c2_i2_geometricMean, c2_i3_geometricMean]
+                gm_sum = gm_values.reduce((acc, value) => acc + value, 0);
+                c2_i1_gm_normarized = c2_i1_geometricMean / gm_sum
+                c2_i2_gm_normarized = c2_i2_geometricMean / gm_sum
+                c2_i3_gm_normarized = c2_i3_geometricMean / gm_sum
+
+                c3_i1_values = [c3_i1_i1, c3_i1_i2, c3_i1_i3, c3_i1_i4];
+                c3_i2_values = [c3_i2_i1, c3_i2_i2, c3_i2_i3, c3_i2_i4];
+                c3_i3_values = [c3_i3_i1, c3_i3_i2, c3_i3_i3, c3_i3_i4];
+                c3_i1_product = c3_i1_values.reduce((acc, value) => acc * value, 1);
+                c3_i1_geometricMean = Math.pow(c3_i1_product, 1 / c3_i1_values.length);
+                c3_i2_product = c3_i2_values.reduce((acc, value) => acc * value, 1);
+                c3_i2_geometricMean = Math.pow(c3_i2_product, 1 / c3_i2_values.length);
+                c3_i3_product = c3_i3_values.reduce((acc, value) => acc * value, 1);
+                c3_i3_geometricMean = Math.pow(c3_i3_product, 1 / c3_i3_values.length);
+                gm_values = [c3_i1_geometricMean, c3_i2_geometricMean, c3_i3_geometricMean]
+                gm_sum = gm_values.reduce((acc, value) => acc + value, 0);
+                c3_i1_gm_normarized = c3_i1_geometricMean / gm_sum
+                c3_i2_gm_normarized = c3_i2_geometricMean / gm_sum
+                c3_i3_gm_normarized = c3_i3_geometricMean / gm_sum
+
+                c4_i1_values = [c4_i1_i1, c4_i1_i2, c4_i1_i3, c4_i1_i4];
+                c4_i2_values = [c4_i2_i1, c4_i2_i2, c4_i2_i3, c4_i2_i4];
+                c4_i3_values = [c4_i3_i1, c4_i3_i2, c4_i3_i3, c4_i3_i4];
+                c4_i1_product = c4_i1_values.reduce((acc, value) => acc * value, 1);
+                c4_i1_geometricMean = Math.pow(c4_i1_product, 1 / c4_i1_values.length);
+                c4_i2_product = c4_i2_values.reduce((acc, value) => acc * value, 1);
+                c4_i2_geometricMean = Math.pow(c4_i2_product, 1 / c4_i2_values.length);
+                c4_i3_product = c4_i3_values.reduce((acc, value) => acc * value, 1);
+                c4_i3_geometricMean = Math.pow(c4_i3_product, 1 / c4_i3_values.length);
+                gm_values = [c4_i1_geometricMean, c4_i2_geometricMean, c4_i3_geometricMean]
+                gm_sum = gm_values.reduce((acc, value) => acc + value, 0);
+                c4_i1_gm_normarized = c4_i1_geometricMean / gm_sum
+                c4_i2_gm_normarized = c4_i2_geometricMean / gm_sum
+                c4_i3_gm_normarized = c4_i3_geometricMean / gm_sum
+
+                c1_i1_gm_normarized_wb = c1_i1_gm_normarized * c1_gm_normarized
+                c2_i1_gm_normarized_wb = c2_i1_gm_normarized * c2_gm_normarized
+                c3_i1_gm_normarized_wb = c3_i1_gm_normarized * c3_gm_normarized
+                c4_i1_gm_normarized_wb = c4_i1_gm_normarized * c4_gm_normarized
+                i1_score = c1_i1_gm_normarized_wb + c2_i1_gm_normarized_wb + c3_i1_gm_normarized_wb + c4_i1_gm_normarized_wb
+                
+                c1_i2_gm_normarized_wb = c1_i2_gm_normarized * c1_gm_normarized
+                c2_i2_gm_normarized_wb = c2_i2_gm_normarized * c2_gm_normarized
+                c3_i2_gm_normarized_wb = c3_i2_gm_normarized * c3_gm_normarized
+                c4_i2_gm_normarized_wb = c4_i2_gm_normarized * c4_gm_normarized
+                i2_score = c1_i2_gm_normarized_wb + c2_i2_gm_normarized_wb + c3_i2_gm_normarized_wb + c4_i2_gm_normarized_wb
+
+                c1_i3_gm_normarized_wb = c1_i3_gm_normarized * c1_gm_normarized
+                c2_i3_gm_normarized_wb = c2_i3_gm_normarized * c2_gm_normarized
+                c3_i3_gm_normarized_wb = c3_i3_gm_normarized * c3_gm_normarized
+                c4_i3_gm_normarized_wb = c4_i3_gm_normarized * c4_gm_normarized
+                i3_score = c1_i3_gm_normarized_wb + c2_i3_gm_normarized_wb + c3_i3_gm_normarized_wb + c4_i3_gm_normarized_wb
+
+                document.getElementById("i1_score").textContent = String(i1_score.toFixed(2));
+                document.getElementById("i2_score").textContent = String(i2_score.toFixed(2));
+                document.getElementById("i3_score").textContent = String(i3_score.toFixed(2));
+                let scores = [
+                    {id: 1, score: i1_score},
+                    {id: 2, score: i2_score},
+                    {id: 3, score: i3_score},
+                ];
+                scores.sort((a, b) => b.score - a.score);
+                for (let i = 0; i < scores.length; i++) {
+                    document.getElementById(`i${scores[i].id}_rank`).textContent = String(i + 1);
+                };
+
+            } else if (criterias < 4 && items == 4) {
+                c1_values = [c1_c1, c1_c2, c1_c3, c1_c4];
+                c2_values = [c2_c1, c2_c2, c2_c3, c2_c4];
+                c3_values = [c3_c1, c3_c2, c3_c3, c3_c4];
+                c1_product = c1_values.reduce((acc, value) => acc * value, 1);
+                c1_geometricMean = Math.pow(c1_product, 1 / c1_values.length);
+                c2_product = c2_values.reduce((acc, value) => acc * value, 1);
+                c2_geometricMean = Math.pow(c2_product, 1 / c2_values.length);
+                c3_product = c3_values.reduce((acc, value) => acc * value, 1);
+                c3_geometricMean = Math.pow(c3_product, 1 / c3_values.length);
+                gm_values = [c1_geometricMean, c2_geometricMean, c3_geometricMean]
+                gm_sum = gm_values.reduce((acc, value) => acc + value, 0);
+                c1_gm_normarized = c1_geometricMean / gm_sum
+                c2_gm_normarized = c2_geometricMean / gm_sum
+                c3_gm_normarized = c3_geometricMean / gm_sum
+
+                c1_i1_values = [c1_i1_i1, c1_i1_i2, c1_i1_i3, c1_i1_i4];
+                c1_i2_values = [c1_i2_i1, c1_i2_i2, c1_i2_i3, c1_i2_i4];
+                c1_i3_values = [c1_i3_i1, c1_i3_i2, c1_i3_i3, c1_i3_i4];
+                c1_i4_values = [c1_i4_i1, c1_i4_i2, c1_i4_i3, c1_i4_i4];
+                c1_i1_product = c1_i1_values.reduce((acc, value) => acc * value, 1);
+                c1_i1_geometricMean = Math.pow(c1_i1_product, 1 / c1_i1_values.length);
+                c1_i2_product = c1_i2_values.reduce((acc, value) => acc * value, 1);
+                c1_i2_geometricMean = Math.pow(c1_i2_product, 1 / c1_i2_values.length);
+                c1_i3_product = c1_i3_values.reduce((acc, value) => acc * value, 1);
+                c1_i3_geometricMean = Math.pow(c1_i3_product, 1 / c1_i3_values.length);
+                c1_i4_product = c1_i4_values.reduce((acc, value) => acc * value, 1);
+                c1_i4_geometricMean = Math.pow(c1_i4_product, 1 / c1_i4_values.length);
+                gm_values = [c1_i1_geometricMean, c1_i2_geometricMean, c1_i3_geometricMean, c1_i4_geometricMean]
+                gm_sum = gm_values.reduce((acc, value) => acc + value, 0);
+                c1_i1_gm_normarized = c1_i1_geometricMean / gm_sum
+                c1_i2_gm_normarized = c1_i2_geometricMean / gm_sum
+                c1_i3_gm_normarized = c1_i3_geometricMean / gm_sum
+                c1_i4_gm_normarized = c1_i4_geometricMean / gm_sum
+
+                c2_i1_values = [c2_i1_i1, c2_i1_i2, c2_i1_i3, c2_i1_i4];
+                c2_i2_values = [c2_i2_i1, c2_i2_i2, c2_i2_i3, c2_i2_i4];
+                c2_i3_values = [c2_i3_i1, c2_i3_i2, c2_i3_i3, c2_i3_i4];
+                c2_i4_values = [c2_i4_i1, c2_i4_i2, c2_i4_i3, c2_i4_i4];
+                c2_i1_product = c2_i1_values.reduce((acc, value) => acc * value, 1);
+                c2_i1_geometricMean = Math.pow(c2_i1_product, 1 / c2_i1_values.length);
+                c2_i2_product = c2_i2_values.reduce((acc, value) => acc * value, 1);
+                c2_i2_geometricMean = Math.pow(c2_i2_product, 1 / c2_i2_values.length);
+                c2_i3_product = c2_i3_values.reduce((acc, value) => acc * value, 1);
+                c2_i3_geometricMean = Math.pow(c2_i3_product, 1 / c2_i3_values.length);
+                c2_i4_product = c2_i4_values.reduce((acc, value) => acc * value, 1);
+                c2_i4_geometricMean = Math.pow(c2_i4_product, 1 / c2_i4_values.length);
+                gm_values = [c2_i1_geometricMean, c2_i2_geometricMean, c2_i3_geometricMean, c2_i4_geometricMean]
+                gm_sum = gm_values.reduce((acc, value) => acc + value, 0);
+                c2_i1_gm_normarized = c2_i1_geometricMean / gm_sum
+                c2_i2_gm_normarized = c2_i2_geometricMean / gm_sum
+                c2_i3_gm_normarized = c2_i3_geometricMean / gm_sum
+                c2_i4_gm_normarized = c2_i4_geometricMean / gm_sum
+
+                c3_i1_values = [c3_i1_i1, c3_i1_i2, c3_i1_i3, c3_i1_i4];
+                c3_i2_values = [c3_i2_i1, c3_i2_i2, c3_i2_i3, c3_i2_i4];
+                c3_i3_values = [c3_i3_i1, c3_i3_i2, c3_i3_i3, c3_i3_i4];
+                c3_i4_values = [c3_i4_i1, c3_i4_i2, c3_i4_i3, c3_i4_i4];
+                c3_i1_product = c3_i1_values.reduce((acc, value) => acc * value, 1);
+                c3_i1_geometricMean = Math.pow(c3_i1_product, 1 / c3_i1_values.length);
+                c3_i2_product = c3_i2_values.reduce((acc, value) => acc * value, 1);
+                c3_i2_geometricMean = Math.pow(c3_i2_product, 1 / c3_i2_values.length);
+                c3_i3_product = c3_i3_values.reduce((acc, value) => acc * value, 1);
+                c3_i3_geometricMean = Math.pow(c3_i3_product, 1 / c3_i3_values.length);
+                c3_i4_product = c3_i4_values.reduce((acc, value) => acc * value, 1);
+                c3_i4_geometricMean = Math.pow(c3_i4_product, 1 / c3_i4_values.length);
+                gm_values = [c3_i1_geometricMean, c3_i2_geometricMean, c3_i3_geometricMean, c3_i4_geometricMean]
+                gm_sum = gm_values.reduce((acc, value) => acc + value, 0);
+                c3_i1_gm_normarized = c3_i1_geometricMean / gm_sum
+                c3_i2_gm_normarized = c3_i2_geometricMean / gm_sum
+                c3_i3_gm_normarized = c3_i3_geometricMean / gm_sum
+                c3_i4_gm_normarized = c3_i4_geometricMean / gm_sum
+
+                c1_i1_gm_normarized_wb = c1_i1_gm_normarized * c1_gm_normarized
+                c2_i1_gm_normarized_wb = c2_i1_gm_normarized * c2_gm_normarized
+                c3_i1_gm_normarized_wb = c3_i1_gm_normarized * c3_gm_normarized
+                i1_score = c1_i1_gm_normarized_wb + c2_i1_gm_normarized_wb + c3_i1_gm_normarized_wb
+                
+                c1_i2_gm_normarized_wb = c1_i2_gm_normarized * c1_gm_normarized
+                c2_i2_gm_normarized_wb = c2_i2_gm_normarized * c2_gm_normarized
+                c3_i2_gm_normarized_wb = c3_i2_gm_normarized * c3_gm_normarized
+                i2_score = c1_i2_gm_normarized_wb + c2_i2_gm_normarized_wb + c3_i2_gm_normarized_wb
+
+                c1_i3_gm_normarized_wb = c1_i3_gm_normarized * c1_gm_normarized
+                c2_i3_gm_normarized_wb = c2_i3_gm_normarized * c2_gm_normarized
+                c3_i3_gm_normarized_wb = c3_i3_gm_normarized * c3_gm_normarized
+                i3_score = c1_i3_gm_normarized_wb + c2_i3_gm_normarized_wb + c3_i3_gm_normarized_wb
+
+                c1_i4_gm_normarized_wb = c1_i4_gm_normarized * c1_gm_normarized
+                c2_i4_gm_normarized_wb = c2_i4_gm_normarized * c2_gm_normarized
+                c3_i4_gm_normarized_wb = c3_i4_gm_normarized * c3_gm_normarized
+                i4_score = c1_i4_gm_normarized_wb + c2_i4_gm_normarized_wb + c3_i4_gm_normarized_wb
+
+                document.getElementById("i1_score").textContent = String(i1_score.toFixed(2));
+                document.getElementById("i2_score").textContent = String(i2_score.toFixed(2));
+                document.getElementById("i3_score").textContent = String(i3_score.toFixed(2));
+                document.getElementById("i4_score").textContent = String(i4_score.toFixed(2));
+                let scores = [
+                    {id: 1, score: i1_score},
+                    {id: 2, score: i2_score},
+                    {id: 3, score: i3_score},
+                    {id: 4, score: i4_score},
+                ];
+                scores.sort((a, b) => b.score - a.score);
+                for (let i = 0; i < scores.length; i++) {
+                    document.getElementById(`i${scores[i].id}_rank`).textContent = String(i + 1);
+                };
+
+            } else {
+                c1_values = [c1_c1, c1_c2, c1_c3, c1_c4];
+                c2_values = [c2_c1, c2_c2, c2_c3, c2_c4];
+                c3_values = [c3_c1, c3_c2, c3_c3, c3_c4];
+                c4_values = [c4_c1, c4_c2, c4_c3, c4_c4];
+                c1_product = c1_values.reduce((acc, value) => acc * value, 1);
+                c1_geometricMean = Math.pow(c1_product, 1 / c1_values.length);
+                c2_product = c2_values.reduce((acc, value) => acc * value, 1);
+                c2_geometricMean = Math.pow(c2_product, 1 / c2_values.length);
+                c3_product = c3_values.reduce((acc, value) => acc * value, 1);
+                c3_geometricMean = Math.pow(c3_product, 1 / c3_values.length);
+                c4_product = c4_values.reduce((acc, value) => acc * value, 1);
+                c4_geometricMean = Math.pow(c4_product, 1 / c4_values.length);
+                gm_values = [c1_geometricMean, c2_geometricMean, c3_geometricMean, c4_geometricMean]
+                gm_sum = gm_values.reduce((acc, value) => acc + value, 0);
+                c1_gm_normarized = c1_geometricMean / gm_sum
+                c2_gm_normarized = c2_geometricMean / gm_sum
+                c3_gm_normarized = c3_geometricMean / gm_sum
+                c4_gm_normarized = c4_geometricMean / gm_sum
+
+                c1_i1_values = [c1_i1_i1, c1_i1_i2, c1_i1_i3, c1_i1_i4];
+                c1_i2_values = [c1_i2_i1, c1_i2_i2, c1_i2_i3, c1_i2_i4];
+                c1_i3_values = [c1_i3_i1, c1_i3_i2, c1_i3_i3, c1_i3_i4];
+                c1_i4_values = [c1_i4_i1, c1_i4_i2, c1_i4_i3, c1_i4_i4];
+                c1_i1_product = c1_i1_values.reduce((acc, value) => acc * value, 1);
+                c1_i1_geometricMean = Math.pow(c1_i1_product, 1 / c1_i1_values.length);
+                c1_i2_product = c1_i2_values.reduce((acc, value) => acc * value, 1);
+                c1_i2_geometricMean = Math.pow(c1_i2_product, 1 / c1_i2_values.length);
+                c1_i3_product = c1_i3_values.reduce((acc, value) => acc * value, 1);
+                c1_i3_geometricMean = Math.pow(c1_i3_product, 1 / c1_i3_values.length);
+                c1_i4_product = c1_i4_values.reduce((acc, value) => acc * value, 1);
+                c1_i4_geometricMean = Math.pow(c1_i4_product, 1 / c1_i4_values.length);
+                gm_values = [c1_i1_geometricMean, c1_i2_geometricMean, c1_i3_geometricMean, c1_i4_geometricMean]
+                gm_sum = gm_values.reduce((acc, value) => acc + value, 0);
+                c1_i1_gm_normarized = c1_i1_geometricMean / gm_sum
+                c1_i2_gm_normarized = c1_i2_geometricMean / gm_sum
+                c1_i3_gm_normarized = c1_i3_geometricMean / gm_sum
+                c1_i4_gm_normarized = c1_i4_geometricMean / gm_sum
+
+                c2_i1_values = [c2_i1_i1, c2_i1_i2, c2_i1_i3, c2_i1_i4];
+                c2_i2_values = [c2_i2_i1, c2_i2_i2, c2_i2_i3, c2_i2_i4];
+                c2_i3_values = [c2_i3_i1, c2_i3_i2, c2_i3_i3, c2_i3_i4];
+                c2_i4_values = [c2_i4_i1, c2_i4_i2, c2_i4_i3, c2_i4_i4];
+                c2_i1_product = c2_i1_values.reduce((acc, value) => acc * value, 1);
+                c2_i1_geometricMean = Math.pow(c2_i1_product, 1 / c2_i1_values.length);
+                c2_i2_product = c2_i2_values.reduce((acc, value) => acc * value, 1);
+                c2_i2_geometricMean = Math.pow(c2_i2_product, 1 / c2_i2_values.length);
+                c2_i3_product = c2_i3_values.reduce((acc, value) => acc * value, 1);
+                c2_i3_geometricMean = Math.pow(c2_i3_product, 1 / c2_i3_values.length);
+                c2_i4_product = c2_i4_values.reduce((acc, value) => acc * value, 1);
+                c2_i4_geometricMean = Math.pow(c2_i4_product, 1 / c2_i4_values.length);
+                gm_values = [c2_i1_geometricMean, c2_i2_geometricMean, c2_i3_geometricMean, c2_i4_geometricMean]
+                gm_sum = gm_values.reduce((acc, value) => acc + value, 0);
+                c2_i1_gm_normarized = c2_i1_geometricMean / gm_sum
+                c2_i2_gm_normarized = c2_i2_geometricMean / gm_sum
+                c2_i3_gm_normarized = c2_i3_geometricMean / gm_sum
+                c2_i4_gm_normarized = c2_i4_geometricMean / gm_sum
+
+                c3_i1_values = [c3_i1_i1, c3_i1_i2, c3_i1_i3, c3_i1_i4];
+                c3_i2_values = [c3_i2_i1, c3_i2_i2, c3_i2_i3, c3_i2_i4];
+                c3_i3_values = [c3_i3_i1, c3_i3_i2, c3_i3_i3, c3_i3_i4];
+                c3_i4_values = [c3_i4_i1, c3_i4_i2, c3_i4_i3, c3_i4_i4];
+                c3_i1_product = c3_i1_values.reduce((acc, value) => acc * value, 1);
+                c3_i1_geometricMean = Math.pow(c3_i1_product, 1 / c3_i1_values.length);
+                c3_i2_product = c3_i2_values.reduce((acc, value) => acc * value, 1);
+                c3_i2_geometricMean = Math.pow(c3_i2_product, 1 / c3_i2_values.length);
+                c3_i3_product = c3_i3_values.reduce((acc, value) => acc * value, 1);
+                c3_i3_geometricMean = Math.pow(c3_i3_product, 1 / c3_i3_values.length);
+                c3_i4_product = c3_i4_values.reduce((acc, value) => acc * value, 1);
+                c3_i4_geometricMean = Math.pow(c3_i4_product, 1 / c3_i4_values.length);
+                gm_values = [c3_i1_geometricMean, c3_i2_geometricMean, c3_i3_geometricMean, c3_i4_geometricMean]
+                gm_sum = gm_values.reduce((acc, value) => acc + value, 0);
+                c3_i1_gm_normarized = c3_i1_geometricMean / gm_sum
+                c3_i2_gm_normarized = c3_i2_geometricMean / gm_sum
+                c3_i3_gm_normarized = c3_i3_geometricMean / gm_sum
+                c3_i4_gm_normarized = c3_i4_geometricMean / gm_sum
+
+                c4_i1_values = [c4_i1_i1, c4_i1_i2, c4_i1_i3, c4_i1_i4];
+                c4_i2_values = [c4_i2_i1, c4_i2_i2, c4_i2_i3, c4_i2_i4];
+                c4_i3_values = [c4_i3_i1, c4_i3_i2, c4_i3_i3, c4_i3_i4];
+                c4_i4_values = [c4_i4_i1, c4_i4_i2, c4_i4_i3, c4_i4_i4];
+                c4_i1_product = c4_i1_values.reduce((acc, value) => acc * value, 1);
+                c4_i1_geometricMean = Math.pow(c4_i1_product, 1 / c4_i1_values.length);
+                c4_i2_product = c4_i2_values.reduce((acc, value) => acc * value, 1);
+                c4_i2_geometricMean = Math.pow(c4_i2_product, 1 / c4_i2_values.length);
+                c4_i3_product = c4_i3_values.reduce((acc, value) => acc * value, 1);
+                c4_i3_geometricMean = Math.pow(c4_i3_product, 1 / c4_i3_values.length);
+                c4_i4_product = c4_i4_values.reduce((acc, value) => acc * value, 1);
+                c4_i4_geometricMean = Math.pow(c4_i4_product, 1 / c4_i4_values.length);
+                gm_values = [c4_i1_geometricMean, c4_i2_geometricMean, c4_i3_geometricMean, c4_i4_geometricMean]
+                gm_sum = gm_values.reduce((acc, value) => acc + value, 0);
+                c4_i1_gm_normarized = c4_i1_geometricMean / gm_sum
+                c4_i2_gm_normarized = c4_i2_geometricMean / gm_sum
+                c4_i3_gm_normarized = c4_i3_geometricMean / gm_sum
+                c4_i4_gm_normarized = c4_i4_geometricMean / gm_sum
+
+                c1_i1_gm_normarized_wb = c1_i1_gm_normarized * c1_gm_normarized
+                c2_i1_gm_normarized_wb = c2_i1_gm_normarized * c2_gm_normarized
+                c3_i1_gm_normarized_wb = c3_i1_gm_normarized * c3_gm_normarized
+                c4_i1_gm_normarized_wb = c4_i1_gm_normarized * c4_gm_normarized
+                i1_score = c1_i1_gm_normarized_wb + c2_i1_gm_normarized_wb + c3_i1_gm_normarized_wb + c4_i1_gm_normarized_wb
+                
+                c1_i2_gm_normarized_wb = c1_i2_gm_normarized * c1_gm_normarized
+                c2_i2_gm_normarized_wb = c2_i2_gm_normarized * c2_gm_normarized
+                c3_i2_gm_normarized_wb = c3_i2_gm_normarized * c3_gm_normarized
+                c4_i2_gm_normarized_wb = c4_i2_gm_normarized * c4_gm_normarized
+                i2_score = c1_i2_gm_normarized_wb + c2_i2_gm_normarized_wb + c3_i2_gm_normarized_wb + c4_i2_gm_normarized_wb
+
+                c1_i3_gm_normarized_wb = c1_i3_gm_normarized * c1_gm_normarized
+                c2_i3_gm_normarized_wb = c2_i3_gm_normarized * c2_gm_normarized
+                c3_i3_gm_normarized_wb = c3_i3_gm_normarized * c3_gm_normarized
+                c4_i3_gm_normarized_wb = c4_i3_gm_normarized * c4_gm_normarized
+                i3_score = c1_i3_gm_normarized_wb + c2_i3_gm_normarized_wb + c3_i3_gm_normarized_wb + c4_i3_gm_normarized_wb
+
+                c1_i4_gm_normarized_wb = c1_i4_gm_normarized * c1_gm_normarized
+                c2_i4_gm_normarized_wb = c2_i4_gm_normarized * c2_gm_normarized
+                c3_i4_gm_normarized_wb = c3_i4_gm_normarized * c3_gm_normarized
+                c4_i4_gm_normarized_wb = c4_i4_gm_normarized * c4_gm_normarized
+                i4_score = c1_i4_gm_normarized_wb + c2_i4_gm_normarized_wb + c3_i4_gm_normarized_wb + c4_i4_gm_normarized_wb
+
+                document.getElementById("i1_score").textContent = String(i1_score.toFixed(2));
+                document.getElementById("i2_score").textContent = String(i2_score.toFixed(2));
+                document.getElementById("i3_score").textContent = String(i3_score.toFixed(2));
+                document.getElementById("i4_score").textContent = String(i4_score.toFixed(2));
+                let scores = [
+                    {id: 1, score: i1_score},
+                    {id: 2, score: i2_score},
+                    {id: 3, score: i3_score},
+                    {id: 4, score: i4_score},
+                ];
+                scores.sort((a, b) => b.score - a.score);
+                for (let i = 0; i < scores.length; i++) {
+                    document.getElementById(`i${scores[i].id}_rank`).textContent = String(i + 1);
+                };
+
+            };
+        };
+    </script>
+
+</html>
